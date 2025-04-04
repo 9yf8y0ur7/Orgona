@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello, World!</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+      <h1 class="title">Hello World! </h1>
+      <p id="currentTime"></p>
+      <script src="script.js"></script>
+  </body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orgona - Screen & Camera Recording</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        header {
+            background-color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #6e3aff;
+        }
+        
+        .menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .menu li {
+            margin-left: 2rem;
+        }
+        
+        .menu a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+        
+        .menu a:hover {
+            color: #6e3aff;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-outline {
+            border: 1px solid #6e3aff;
+            color: #6e3aff;
+            background: transparent;
+        }
+        
+        .btn-outline:hover {
+            background-color: #f0e6ff;
+        }
+        
+        .btn-primary {
+            background-color: #6e3aff;
+            color: white;
+            border: 1px solid #6e3aff;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5a2bd6;
+            border-color: #5a2bd6;
+        }
+        
+        main {
+            margin-top: 80px;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 5rem 1rem;
+            background: linear-gradient(135deg, #f0e6ff, #ffffff);
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.6;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .demo-video {
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .demo-video video {
+            width: 100%;
+            display: block;
+        }
+        
+        .features {
+            padding: 5rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .features h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 3rem;
+            color: #1a1a1a;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #6e3aff;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+        
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .how-it-works {
+            padding: 5rem 1rem;
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+        
+        .how-it-works h2 {
+            font-size: 2.2rem;
+            margin-bottom: 3rem;
+            color: #1a1a1a;
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 250px;
+            max-width: 300px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: #6e3aff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+        
+        .step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+        
+        .step p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .final-cta {
+            padding: 5rem 1rem;
+            text-align: center;
+            background: linear-gradient(135deg, #6e3aff, #8a5aff);
+            color: white;
+        }
+        
+        .final-cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .final-cta p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.6;
+        }
+        
+        footer {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 3rem 1rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: #ddd;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-column a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            color: #aaa;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Orgona</div>
+            <ul class="menu">
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Solutions</a></li>
+                <li><a href="#">Pricing</a></li>
+                <li><a href="#">Resources</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-outline">Log in</a>
+                <a href="#" class="btn btn-primary">Sign up free</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="hero">
+            <h1>Record your screen and camera instantly</h1>
+            <p>Orgona helps you communicate clearly with asynchronous video. Record and share quick videos of your screen and camera to collaborate more effectively.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary">Get Orgona for free</a>
+                <a href="#" class="btn btn-outline">See how it works</a>
+            </div>
+            <div class="demo-video">
+                <video controls poster="https://via.placeholder.com/800x450">
+                    <source src="#" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </section>
+        
+        <section class="features">
+            <h2>Powerful features for better communication</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎥</div>
+                    <h3>Screen & Camera Recording</h3>
+                    <p>Record your screen, camera, or both at the same time. Perfect for presentations, tutorials, and feedback.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Instant Sharing</h3>
+                    <p>Get a shareable link the moment you stop recording. No uploading or processing delays.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Viewer Analytics</h3>
+                    <p>See who watched your videos and how much they viewed. Get insights into your audience.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Privacy Controls</h3>
+                    <p>Password protect your videos, set expiration dates, or make them private to specific people.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✏️</div>
+                    <h3>Quick Editing</h3>
+                    <p>Trim your videos, add captions, and insert call-to-actions without leaving Orgona.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Integrations</h3>
+                    <p>Works seamlessly with Slack, Google Drive, Notion, and all your favorite tools.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="how-it-works">
+            <h2>How Orgona works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Download & Install</h3>
+                    <p>Get the Orgona desktop app for Mac or Windows, or use our Chrome extension.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Start Recording</h3>
+                    <p>Click the Orgona icon to record your screen, camera, or both with just one click.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Share Instantly</h3>
+                    <p>Get a link to share your video immediately. No waiting for uploads or processing.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="final-cta">
+            <h2>Ready to communicate more clearly?</h2>
+            <p>Join millions of people and teams who use Orgona to save time and communicate better every day.</p>
+            <a href="#" class="btn btn-primary" style="background-color: white; color: #6e3aff;">Get Orgona for free</a>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Product</h3>
+                <ul>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Integrations</a></li>
+                    <li><a href="#">Download</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Solutions</h3>
+                <ul>
+                    <li><a href="#">For Business</a></li>
+                    <li><a href="#">For Education</a></li>
+                    <li><a href="#">For Support</a></li>
+                    <li><a href="#">For Sales</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Tutorials</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Security</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 Orgona Inc. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orgona - Menu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        .menu-container {
+            position: relative;
+            display: inline-block;
+            margin: 20px;
+        }
+        
+        .menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .dot {
+            width: 4px;
+            height: 4px;
+            background-color: #333;
+            border-radius: 50%;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            display: none;
+            overflow: hidden;
+        }
+        
+        .dropdown-menu a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown-menu a:hover {
+            background-color: #f0e6ff;
+            color: #6e3aff;
+        }
+        
+        .menu-container:hover .dropdown-menu {
+            display: block;
+        }
+        
+        .divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <button class="menu-btn">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </button>
+        <div class="dropdown-menu">
+            <a href="#">Home</a>
+            <div class="divider"></div>
+            <a href="#">Login</a>
+            <a href="#">Sign Up</a>
+        </div>
+    </div>
+
+    <script>
+        // Optional JavaScript for better mobile interaction
+        document.querySelector('.menu-btn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const menu = document.querySelector('.dropdown-menu');
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function() {
+            document.querySelector('.dropdown-menu').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
